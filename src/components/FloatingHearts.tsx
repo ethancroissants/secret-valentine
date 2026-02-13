@@ -14,13 +14,13 @@ export function FloatingHearts() {
   const [hearts, setHearts] = useState<HeartParticle[]>([]);
 
   useEffect(() => {
-    const particleCount = window.innerWidth < 768 ? 8 : 15;
+    const particleCount = window.innerWidth < 768 ? 6 : 12;
     const particles: HeartParticle[] = Array.from({ length: particleCount }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
-      size: 16 + Math.random() * 24,
-      duration: 15 + Math.random() * 10,
-      delay: Math.random() * 5,
+      size: 20 + Math.random() * 32,
+      duration: 18 + Math.random() * 12,
+      delay: Math.random() * 8,
     }));
     setHearts(particles);
   }, []);
@@ -33,8 +33,9 @@ export function FloatingHearts() {
           initial={{ y: '100vh', opacity: 0, rotate: 0 }}
           animate={{
             y: '-100vh',
-            opacity: [0, 1, 1, 0],
+            opacity: [0, 0.3, 0.3, 0],
             rotate: 360,
+            x: [0, 30, -30, 0],
           }}
           transition={{
             duration: heart.duration,
@@ -51,7 +52,7 @@ export function FloatingHearts() {
           <Heart
             size={heart.size}
             weight="fill"
-            className="text-primary/20"
+            className="text-primary/15"
           />
         </motion.div>
       ))}

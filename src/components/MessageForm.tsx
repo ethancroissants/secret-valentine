@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, PaperPlaneRight, EnvelopeSimple, Phone } from '@phosphor-icons/react';
+import { PaperPlaneRight, EnvelopeSimple, Phone, Heart } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -95,14 +95,16 @@ export function MessageForm() {
 
   if (showSuccess) {
     return (
-      <Card className="p-8 text-center max-w-md mx-auto">
-        <h2 className="text-2xl font-semibold text-foreground mb-2">Message Submitted</h2>
+      <Card className="p-10 text-center max-w-md mx-auto border-primary/20 shadow-lg shadow-primary/5">
+        <Heart size={56} weight="fill" className="text-primary mx-auto mb-4" />
+        <h2 className="text-3xl font-semibold text-foreground mb-3">Sent</h2>
         <p className="text-muted-foreground mb-6">
-          Your anonymous message will be delivered.
+          Your message will be delivered soon.
         </p>
         <Button
           onClick={() => setShowSuccess(false)}
           variant="outline"
+          className="border-primary/30 hover:bg-primary/10"
         >
           Send Another
         </Button>
@@ -111,18 +113,15 @@ export function MessageForm() {
   }
 
   return (
-    <Card className="p-8 md:p-10 max-w-xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-3">
-          Send Anonymous Message
+    <Card className="p-8 md:p-10 max-w-xl mx-auto border-primary/20 shadow-2xl shadow-primary/10 backdrop-blur-sm bg-card/95">
+      <div className="mb-8 text-center">
+        <Heart size={48} weight="fill" className="text-primary mx-auto mb-4" />
+        <h1 className="text-4xl md:text-5xl font-semibold text-foreground mb-3 tracking-tight">
+          Anonymous Valentine
         </h1>
-        <p className="text-muted-foreground mb-4">
-          Send a message without revealing your identity
+        <p className="text-muted-foreground">
+          Send a message anonymously
         </p>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-md px-3 py-2">
-          <ShieldCheck size={16} weight="fill" />
-          <span>We don't collect any sender information</span>
-        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -206,14 +205,14 @@ export function MessageForm() {
         <div className="pt-2">
           <Button
             type="submit"
-            className="w-full"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              'Submitting...'
+              'Sending...'
             ) : (
               <>
-                <PaperPlaneRight size={18} className="mr-2" />
+                <PaperPlaneRight size={18} className="mr-2" weight="fill" />
                 Send Message
               </>
             )}

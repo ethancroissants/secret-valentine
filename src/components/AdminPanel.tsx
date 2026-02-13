@@ -5,7 +5,7 @@ import {
   CheckCircle,
   Clock,
   ArrowLeft,
-  List,
+  Heart,
 } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -58,7 +58,7 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <List size={32} className="text-muted-foreground animate-pulse mx-auto mb-4" />
+          <Heart size={40} className="text-primary animate-pulse mx-auto mb-4" weight="fill" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -68,12 +68,12 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
   if (!isOwner) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">
-        <Card className="p-10 text-center max-w-md">
-          <h2 className="text-2xl font-semibold text-foreground mb-3">Access Denied</h2>
+        <Card className="p-10 text-center max-w-md border-primary/20 shadow-xl shadow-primary/10">
+          <h2 className="text-3xl font-semibold text-foreground mb-3">Access Denied</h2>
           <p className="text-muted-foreground mb-6">
-            Only the app owner can access the admin panel.
+            Only the app owner can access this panel.
           </p>
-          <Button onClick={onBack} variant="outline">
+          <Button onClick={onBack} variant="outline" className="border-primary/30 hover:bg-primary/10">
             <ArrowLeft size={18} className="mr-2" />
             Back
           </Button>
@@ -91,14 +91,14 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-2">
+            <h1 className="text-4xl md:text-5xl font-semibold text-foreground mb-2">
               Admin Panel
             </h1>
             <p className="text-muted-foreground">
               Manage submitted messages
             </p>
           </div>
-          <Button onClick={onBack} variant="outline">
+          <Button onClick={onBack} variant="outline" className="border-primary/30 hover:bg-primary/10">
             <ArrowLeft size={18} className="mr-2" />
             Back
           </Button>
@@ -117,8 +117,8 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
 
           <TabsContent value="pending" className="space-y-4">
             {pendingMessages.length === 0 ? (
-              <Card className="p-10 text-center">
-                <CheckCircle size={48} className="text-muted-foreground/50 mx-auto mb-4" />
+              <Card className="p-10 text-center border-primary/20">
+                <CheckCircle size={48} className="text-muted-foreground/50 mx-auto mb-4" weight="fill" />
                 <p className="text-muted-foreground">
                   No pending messages
                 </p>
@@ -140,8 +140,8 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
 
           <TabsContent value="fulfilled" className="space-y-4">
             {fulfilledMessages.length === 0 ? (
-              <Card className="p-10 text-center">
-                <Clock size={48} className="text-muted-foreground/50 mx-auto mb-4" />
+              <Card className="p-10 text-center border-primary/20">
+                <Clock size={48} className="text-muted-foreground/50 mx-auto mb-4" weight="fill" />
                 <p className="text-muted-foreground">
                   No fulfilled messages yet
                 </p>
@@ -163,8 +163,8 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
 
           <TabsContent value="all" className="space-y-4">
             {messages.length === 0 ? (
-              <Card className="p-10 text-center">
-                <List size={48} className="text-muted-foreground/50 mx-auto mb-4" />
+              <Card className="p-10 text-center border-primary/20">
+                <Heart size={48} className="text-muted-foreground/50 mx-auto mb-4" weight="fill" />
                 <p className="text-muted-foreground">
                   No messages yet
                 </p>
@@ -205,7 +205,7 @@ function MessageCard({ message, onToggleFulfilled }: MessageCardProps) {
   });
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 border-primary/20 hover:border-primary/40 transition-colors">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-foreground">
@@ -217,8 +217,8 @@ function MessageCard({ message, onToggleFulfilled }: MessageCardProps) {
           variant={message.fulfilled ? 'default' : 'secondary'}
           className={
             message.fulfilled
-              ? 'bg-green-100 text-green-800 border-green-200'
-              : 'bg-orange-100 text-orange-800 border-orange-200'
+              ? 'bg-primary/20 text-primary border-primary/40'
+              : 'bg-accent/20 text-accent border-accent/40'
           }
         >
           {message.fulfilled ? (
@@ -235,16 +235,16 @@ function MessageCard({ message, onToggleFulfilled }: MessageCardProps) {
         </Badge>
       </div>
 
-      <div className="bg-muted/50 rounded-md p-4 mb-4">
+      <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-primary/10">
         <p className="text-foreground whitespace-pre-wrap">{message.message}</p>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           {message.contactMethod === 'email' ? (
-            <EnvelopeSimple size={16} />
+            <EnvelopeSimple size={16} weight="fill" />
           ) : (
-            <Phone size={16} />
+            <Phone size={16} weight="fill" />
           )}
           <span className="font-medium">{message.contactValue}</span>
         </div>
@@ -253,6 +253,7 @@ function MessageCard({ message, onToggleFulfilled }: MessageCardProps) {
           onClick={() => onToggleFulfilled(message.id)}
           variant={message.fulfilled ? 'outline' : 'default'}
           size="sm"
+          className={message.fulfilled ? 'border-primary/30 hover:bg-primary/10' : 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20'}
         >
           {message.fulfilled ? 'Mark Pending' : 'Mark Fulfilled'}
         </Button>
