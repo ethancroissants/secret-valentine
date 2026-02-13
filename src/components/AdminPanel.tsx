@@ -17,7 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 import { fetchMessages, updateMessageFulfilled, type Message } from '@/lib/db';
 
-const ADMIN_PASSWORD = 'EthanIsCool';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'EthanIsCool';
 
 interface AdminPanelProps {
   onBack: () => void;

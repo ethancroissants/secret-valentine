@@ -13,9 +13,11 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build arg for database URL (falls back to hardcoded default if not set)
+# Build args
 ARG VITE_DATABASE_URL
+ARG VITE_ADMIN_PASSWORD
 ENV VITE_DATABASE_URL=$VITE_DATABASE_URL
+ENV VITE_ADMIN_PASSWORD=$VITE_ADMIN_PASSWORD
 
 # Build the app
 RUN npm run build
