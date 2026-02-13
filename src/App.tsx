@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FloatingHearts } from '@/components/FloatingHearts';
 import { MessageForm } from '@/components/MessageForm';
 import { AdminPanel } from '@/components/AdminPanel';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,6 @@ function App() {
   if (showAdmin) {
     return (
       <>
-        <FloatingHearts />
         <AdminPanel onBack={() => setShowAdmin(false)} />
         <Toaster />
       </>
@@ -19,10 +17,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <FloatingHearts />
-      
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 py-12">
+    <div className="min-h-screen">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 py-12">
         <MessageForm />
         
         <Button
