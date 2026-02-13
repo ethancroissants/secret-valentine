@@ -113,7 +113,7 @@ export function MessageForm() {
           <br />
           Dont abuse this please
           <br />
-          made by Ethan. Styles made by Emma
+          design not by me, everything else I made though
         </p>
       </div>
 
