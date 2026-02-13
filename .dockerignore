@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.github
+.devcontainer
+.vscode
+*.log
+pids
+.env

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import {
   EnvelopeSimple,
   Phone,
@@ -10,74 +10,135 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useKV } from '@github/spark/hooks';
 import { toast } from 'sonner';
+import { fetchMessages, updateMessageFulfilled, type Message } from '@/lib/db';
 
-interface Message {
-  id: string;
-  recipientName: string;
-  message: string;
-  contactMethod: 'email' | 'phone';
-  contactValue: string;
-  timestamp: number;
-  fulfilled: boolean;
-}
+const ADMIN_PASSWORD = 'EthanIsCool';
 
 interface AdminPanelProps {
   onBack: () => void;
 }
 
 export function AdminPanel({ onBack }: AdminPanelProps) {
-  const [messages = [], setMessages] = useKV<Message[]>('valentine-messages', []);
-  const [isOwner, setIsOwner] = useState<boolean | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
-    const checkOwner = async () => {
-      try {
-        const user = await window.spark.user();
-        setIsOwner(user?.isOwner ?? false);
-      } catch (error) {
-        setIsOwner(false);
-      }
-    };
-    checkOwner();
+    const savedAuth = sessionStorage.getItem('admin-auth') === 'true';
+    setIsAuthenticated(savedAuth);
   }, []);
 
-  const toggleFulfilled = (id: string) => {
-    setMessages((currentMessages = []) =>
-      currentMessages.map((msg) =>
-        msg.id === id ? { ...msg, fulfilled: !msg.fulfilled } : msg
-      )
-    );
-    toast.success('Status updated');
+  useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const data = await fetchMessages();
+        setMessages(data);
+      } catch (error) {
+        toast.error('Failed to load messages. Please refresh.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadMessages();
+  }, []);
+
+  const handleAuthenticate = (event: FormEvent) => {
+    event.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin-auth', 'true');
+      setAuthError('');
+      setPassword('');
+      return;
+    }
+    setAuthError('Incorrect password');
   };
 
-  if (isOwner === null) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Heart size={40} className="text-primary animate-pulse mx-auto mb-4" weight="fill" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  const toggleFulfilled = async (id: string) => {
+    const target = messages.find((msg) => msg.id === id);
+    if (!target) return;
+    const nextFulfilled = !target.fulfilled;
 
-  if (!isOwner) {
+    setMessages((currentMessages) =>
+      currentMessages.map((msg) =>
+        msg.id === id ? { ...msg, fulfilled: nextFulfilled } : msg
+      )
+    );
+
+    try {
+      const updated = await updateMessageFulfilled(id, nextFulfilled);
+      if (!updated) {
+        throw new Error('Message not found');
+      }
+      setMessages((currentMessages) =>
+        currentMessages.map((msg) =>
+          msg.id === id ? updated : msg
+        )
+      );
+      toast.success('Status updated');
+    } catch (error) {
+      setMessages((currentMessages) =>
+        currentMessages.map((msg) =>
+          msg.id === id ? { ...msg, fulfilled: target.fulfilled } : msg
+        )
+      );
+      toast.error('Failed to update status');
+    }
+  };
+
+  if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">
-        <Card className="p-10 text-center max-w-md border-primary/20 shadow-xl shadow-primary/10">
-          <h2 className="text-3xl font-semibold text-foreground mb-3">Access Denied</h2>
+        <Card className="p-10 text-center max-w-md border-primary/20 shadow-xl shadow-primary/10 w-full">
+          <h2 className="text-3xl font-semibold text-foreground mb-3">Admin Login</h2>
           <p className="text-muted-foreground mb-6">
-            Only the app owner can access this panel.
+            Enter the admin password to continue.
           </p>
-          <Button onClick={onBack} variant="outline" className="border-primary/30 hover:bg-primary/10">
+          <form onSubmit={handleAuthenticate} className="space-y-4">
+            <div className="space-y-2 text-left">
+              <Label htmlFor="admin-password">Password</Label>
+              <Input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter password"
+              />
+              {authError ? (
+                <p className="text-sm text-destructive">{authError}</p>
+              ) : null}
+            </div>
+            <Button type="submit" className="w-full">
+              Unlock
+            </Button>
+          </form>
+          <Button
+            onClick={onBack}
+            variant="outline"
+            className="mt-4 w-full border-primary/30 hover:bg-primary/10"
+          >
             <ArrowLeft size={18} className="mr-2" />
             Back
           </Button>
         </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Heart size={40} className="text-primary animate-pulse mx-auto mb-4" weight="fill" />
+          <p className="text-muted-foreground">Loading messages...</p>
+        </div>
       </div>
     );
   }

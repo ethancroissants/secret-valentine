@@ -7,27 +7,15 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { useKV } from '@github/spark/hooks';
-
-interface Message {
-  id: string;
-  recipientName: string;
-  message: string;
-  contactMethod: 'email' | 'phone';
-  contactValue: string;
-  timestamp: number;
-  fulfilled: boolean;
-}
+import { createMessage, type NewMessage } from '@/lib/db';
 
 export function MessageForm() {
   const [recipientName, setRecipientName] = useState('');
   const [message, setMessage] = useState('');
-  const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
+  const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('phone');
   const [contactValue, setContactValue] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  const [messages = [], setMessages] = useKV<Message[]>('valentine-messages', []);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -67,19 +55,20 @@ export function MessageForm() {
 
     setIsSubmitting(true);
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
+    const newMessage: NewMessage = {
       recipientName: recipientName.trim(),
       message: message.trim(),
       contactMethod,
       contactValue: contactValue.trim(),
-      timestamp: Date.now(),
-      fulfilled: false,
     };
 
-    setMessages((currentMessages = []) => [...currentMessages, newMessage]);
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      await createMessage(newMessage);
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.');
+      setIsSubmitting(false);
+      return;
+    }
 
     setIsSubmitting(false);
     setShowSuccess(true);
@@ -99,7 +88,7 @@ export function MessageForm() {
         <Heart size={56} weight="fill" className="text-primary mx-auto mb-4" />
         <h2 className="text-3xl font-semibold text-foreground mb-3">Sent</h2>
         <p className="text-muted-foreground mb-6">
-          Your message will be delivered soon.
+          Your message will be delivered soon! This may take up to 5 hours since sending texts are kinda expensive tbh.
         </p>
         <Button
           onClick={() => setShowSuccess(false)}
@@ -117,10 +106,12 @@ export function MessageForm() {
       <div className="mb-8 text-center">
         <Heart size={48} weight="fill" className="text-primary mx-auto mb-4" />
         <h1 className="text-4xl md:text-5xl font-semibold text-foreground mb-3 tracking-tight">
-          Anonymous Valentine
+          secret valentine thingy
         </h1>
         <p className="text-muted-foreground">
-          Send a message anonymously
+          Send a message without them knowing :D
+          <br />
+          Dont abuse this please
         </p>
       </div>
 

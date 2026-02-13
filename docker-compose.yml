@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_DATABASE_URL: "postgresql://neondb_owner:npg_ksobdA9xH4Tg@ep-autumn-morning-ai09bu3t-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
