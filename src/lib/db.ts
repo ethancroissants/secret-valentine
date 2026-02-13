@@ -22,9 +22,10 @@ type DbMessageRow = {
   fulfilled: boolean;
 };
 
-const DATABASE_URL =
-  import.meta.env.VITE_DATABASE_URL ??
-  'postgresql://neondb_owner:npg_ksobdA9xH4Tg@ep-autumn-morning-ai09bu3t-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
+if (!DATABASE_URL) {
+  throw new Error('VITE_DATABASE_URL environment variable is not set');
+}
 
 const sql = neon(DATABASE_URL);
 let isInitialized = false;
