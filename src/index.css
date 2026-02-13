@@ -8,7 +8,7 @@
   
   body {
     font-family: 'Space Grotesk', sans-serif;
-    background: linear-gradient(135deg, oklch(0.25 0.15 15) 0%, oklch(0.20 0.12 10) 50%, oklch(0.15 0.08 350) 100%);
+    background: linear-gradient(135deg, oklch(0.92 0.08 15) 0%, oklch(0.88 0.06 10) 50%, oklch(0.90 0.05 350) 100%);
     background-attachment: fixed;
   }
   
@@ -19,23 +19,23 @@
 }
 
 :root {
-  --background: oklch(0.22 0.12 10);
-  --foreground: oklch(0.98 0.02 15);
+  --background: oklch(0.95 0.05 10);
+  --foreground: oklch(0.20 0.08 15);
 
-  --card: oklch(0.18 0.10 5);
-  --card-foreground: oklch(0.98 0.02 15);
+  --card: oklch(0.98 0.03 5);
+  --card-foreground: oklch(0.20 0.08 15);
 
-  --popover: oklch(0.18 0.10 5);
-  --popover-foreground: oklch(0.98 0.02 15);
+  --popover: oklch(0.98 0.03 5);
+  --popover-foreground: oklch(0.20 0.08 15);
 
   --primary: oklch(0.62 0.24 15);
   --primary-foreground: oklch(0.98 0.02 15);
 
-  --secondary: oklch(0.30 0.08 350);
-  --secondary-foreground: oklch(0.98 0.02 15);
+  --secondary: oklch(0.88 0.06 350);
+  --secondary-foreground: oklch(0.20 0.08 15);
 
-  --muted: oklch(0.25 0.06 5);
-  --muted-foreground: oklch(0.70 0.05 15);
+  --muted: oklch(0.92 0.04 5);
+  --muted-foreground: oklch(0.45 0.05 15);
 
   --accent: oklch(0.70 0.26 25);
   --accent-foreground: oklch(0.98 0.02 15);
@@ -43,8 +43,8 @@
   --destructive: oklch(0.55 0.22 20);
   --destructive-foreground: oklch(0.98 0.02 15);
 
-  --border: oklch(0.30 0.08 5);
-  --input: oklch(0.30 0.08 5);
+  --border: oklch(0.85 0.04 5);
+  --input: oklch(0.85 0.04 5);
   --ring: oklch(0.62 0.24 15);
 
   --radius: 0.75rem;
