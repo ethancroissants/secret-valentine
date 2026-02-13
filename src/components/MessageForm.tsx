@@ -112,6 +112,8 @@ export function MessageForm() {
           Send a message without them knowing :D
           <br />
           Dont abuse this please
+          <br />
+          made by Ethan. Styles made by Emma
         </p>
       </div>
 
